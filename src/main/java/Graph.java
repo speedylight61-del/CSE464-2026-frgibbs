@@ -1,13 +1,21 @@
-import java.util.HashSet;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Graph {
 
-    private Set<String> nodes = new HashSet<>();
-    private Set<String> edges = new HashSet<>();
+    private Set<String> nodes = new LinkedHashSet<>();
+    private Set<String> edges = new LinkedHashSet<>();
 
     public void addNode(String label) {
         nodes.add(label);
+    }
+
+    public void addNodes(String[] labels) {
+        for (String label : labels) {
+            addNode(label);
+        }
     }
 
     public void addEdge(String srcLabel, String dstLabel) {
@@ -16,6 +24,13 @@ public class Graph {
         edges.add(srcLabel + " -> " + dstLabel);
     }
 
+    public void outputGraph(String filepath) throws IOException {
+        FileWriter writer = new FileWriter(filepath);
+        writer.write(toString());
+        writer.close();
+    }
+
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
 
