@@ -9,19 +9,32 @@ public class Graph {
     private Set<String> edges = new LinkedHashSet<>();
 
     public void addNode(String label) {
-        nodes.add(label);
+        if (label != null && !label.trim().isEmpty()) {
+            nodes.add(label.trim());
+        }
     }
 
     public void addNodes(String[] labels) {
+        if (labels == null) {
+            return;
+        }
+
         for (String label : labels) {
             addNode(label);
         }
     }
 
     public void addEdge(String srcLabel, String dstLabel) {
-        nodes.add(srcLabel);
-        nodes.add(dstLabel);
-        edges.add(srcLabel + " -> " + dstLabel);
+        if (srcLabel != null && dstLabel != null) {
+            srcLabel = srcLabel.trim();
+            dstLabel = dstLabel.trim();
+
+            if (!srcLabel.isEmpty() && !dstLabel.isEmpty()) {
+                addNode(srcLabel);
+                addNode(dstLabel);
+                edges.add(srcLabel + " -> " + dstLabel);
+            }
+        }
     }
 
     public void outputGraph(String filepath) throws IOException {

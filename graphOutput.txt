@@ -1,9 +1,12 @@
-Number of nodes: 4
+Number of nodes: 7
 Nodes:
 a
 b
 c
 d
+e
+f
+g
 Number of edges: 3
 Edges:
 a -> b
