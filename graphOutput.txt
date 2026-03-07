@@ -7,8 +7,10 @@ d
 e
 f
 g
-Number of edges: 3
+Number of edges: 5
 Edges:
 a -> b
 b -> c
 c -> d
+e -> f
+f -> g

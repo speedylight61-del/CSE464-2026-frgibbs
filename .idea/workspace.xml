@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4c0beb0-83e9-468d-aa00-414032449615" name="Changes" comment="Feature 1: parseGraph and graph display">
+    <list default="true" id="c4c0beb0-83e9-468d-aa00-414032449615" name="Changes" comment="Feature 2: addNode and addNodes methods">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphOutput.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphOutput.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Graph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1772845188184</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Feature 2: addNode and addNodes methods">
+      <created>1772845716568</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1772845716568</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -120,6 +125,7 @@
     <MESSAGE value="Add Maven project structure" />
     <MESSAGE value="graph parser" />
     <MESSAGE value="Feature 1: parseGraph and graph display" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature 1: parseGraph and graph display" />
+    <MESSAGE value="Feature 2: addNode and addNodes methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature 2: addNode and addNodes methods" />
   </component>
 </project>
