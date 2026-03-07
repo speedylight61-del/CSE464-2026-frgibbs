@@ -37,9 +37,17 @@ public class Graph {
         }
     }
 
-    public void outputGraph(String filepath) throws IOException {
+    public void outputGraph(String filepath) throws Exception {
         FileWriter writer = new FileWriter(filepath);
-        writer.write(toString());
+
+        writer.write("digraph {\n");
+
+        for (String edge : edges) {
+            writer.write("    " + edge + ";\n");
+        }
+
+        writer.write("}\n");
+
         writer.close();
     }
 

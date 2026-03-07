@@ -1,16 +1,7 @@
-Number of nodes: 7
-Nodes:
-a
-b
-c
-d
-e
-f
-g
-Number of edges: 5
-Edges:
-a -> b
-b -> c
-c -> d
-e -> f
-f -> g
+digraph {
+    a -> b;
+    b -> c;
+    c -> d;
+    e -> f;
+    f -> g;
+}
