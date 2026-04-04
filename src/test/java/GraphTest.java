@@ -118,4 +118,21 @@ public class GraphTest {
 
         graphObj.removeEdge("q", "p");
     }
+    @Test
+    public void testBFSPath(){
+        Graph graphObj=new Graph();
+        graphObj.addEdge("a","b");
+        graphObj.addEdge("b","c");
+        graphObj.addEdge("c","d");
+        String result=graphObj.graphSearch("a","d");
+        assertEquals("a -> b -> c -> d",result);
+    }
+    @Test
+    public void testBFSNoPath(){
+        Graph graphObj=new Graph();
+        graphObj.addEdge("a","b");
+        graphObj.addEdge("c","d");
+        String result=graphObj.graphSearch("a","d");
+        assertNull(result);
+    }
 }
