@@ -38,7 +38,7 @@ public class GraphTest {
     public void verifyGraphFileOutput() throws Exception {
         Graph graphObj = new Graph();
 
-        graphObj.addNodes(new String[]{"a","b","c","d","e","f","g"});
+        graphObj.addNodes(new String[]{"a", "b", "c", "d", "e", "f", "g"});
         graphObj.addEdge("a", "b");
         graphObj.addEdge("b", "c");
         graphObj.addEdge("c", "d");
@@ -118,21 +118,50 @@ public class GraphTest {
 
         graphObj.removeEdge("q", "p");
     }
+
     @Test
-    public void testBFSPath(){
-        Graph graphObj=new Graph();
-        graphObj.addEdge("a","b");
-        graphObj.addEdge("b","c");
-        graphObj.addEdge("c","d");
-        String result=graphObj.graphSearch("a","d");
-        assertEquals("a -> b -> c -> d",result);
+    public void testMergedBFSPath() {
+        Graph graphObj = new Graph();
+        graphObj.addEdge("a", "b");
+        graphObj.addEdge("b", "c");
+        graphObj.addEdge("c", "d");
+
+        String result = graphObj.graphSearch("a", "d", Graph.Algorithm.BFS);
+
+        assertEquals("a -> b -> c -> d", result);
     }
+
     @Test
-    public void testBFSNoPath(){
-        Graph graphObj=new Graph();
-        graphObj.addEdge("a","b");
-        graphObj.addEdge("c","d");
-        String result=graphObj.graphSearch("a","d");
+    public void testMergedDFSPath() {
+        Graph graphObj = new Graph();
+        graphObj.addEdge("a", "b");
+        graphObj.addEdge("b", "c");
+        graphObj.addEdge("c", "d");
+
+        String result = graphObj.graphSearch("a", "d", Graph.Algorithm.DFS);
+
+        assertEquals("a -> b -> c -> d", result);
+    }
+
+    @Test
+    public void testMergedBFSNoPath() {
+        Graph graphObj = new Graph();
+        graphObj.addEdge("a", "b");
+        graphObj.addEdge("c", "d");
+
+        String result = graphObj.graphSearch("a", "d", Graph.Algorithm.BFS);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void testMergedDFSNoPath() {
+        Graph graphObj = new Graph();
+        graphObj.addEdge("a", "b");
+        graphObj.addEdge("c", "d");
+
+        String result = graphObj.graphSearch("a", "d", Graph.Algorithm.DFS);
+
         assertNull(result);
     }
 }
