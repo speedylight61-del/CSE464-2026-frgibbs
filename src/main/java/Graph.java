@@ -42,7 +42,6 @@ public class Graph {
         }
     }
 
-    // Q1: remove one node and its connected edges
     public void removeNode(String nodeLabel) {
         if (nodeLabel == null || nodeLabel.trim().isEmpty()) {
             throw new IllegalArgumentException("bad input");
@@ -63,7 +62,6 @@ public class Graph {
         edges = updatedEdges;
     }
 
-    // Q1: remove multiple nodes
     public void removeNodes(String[] nodeArray) {
         if (nodeArray == null) {
             throw new IllegalArgumentException("null input");
@@ -73,7 +71,6 @@ public class Graph {
         }
     }
 
-    // Q1: remove one edge
     public void removeEdge(String from, String to) {
         if (from == null || to == null) {
             throw new IllegalArgumentException("null edge");
@@ -89,30 +86,30 @@ public class Graph {
         }
     }
 
-    // Q5: choose BFS or DFS with enum
-    public String graphSearch(String start, String end, Algorithm algo) {
+    // ONLY CHANGE: start → source, end → destination
+    public String graphSearch(String source, String destination, Algorithm algo) {
         if (algo == Algorithm.BFS) {
-            return bfsSearch(start, end);
+            return bfsSearch(source, destination);
         }
-        return dfsSearch(start, end);
+        return dfsSearch(source, destination);
     }
 
-    private String bfsSearch(String start, String end) {
-        if (start == null || end == null) return null;
-        start = start.trim();
-        end = end.trim();
-        if (!nodes.contains(start) || !nodes.contains(end)) return null;
+    private String bfsSearch(String source, String destination) {
+        if (source == null || destination == null) return null;
+        source = source.trim();
+        destination = destination.trim();
+        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Queue<String> q = new LinkedList<>();
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
 
-        q.add(start);
-        visited.add(start);
+        q.add(source);
+        visited.add(source);
 
         while (!q.isEmpty()) {
             String current = q.poll();
-            if (current.equals(end)) {
+            if (current.equals(destination)) {
                 break;
             }
 
@@ -129,23 +126,23 @@ public class Graph {
             }
         }
 
-        if (!visited.contains(end)) return null;
-        return buildPath(end, parent);
+        if (!visited.contains(destination)) return null;
+        return buildPath(destination, parent);
     }
 
-    private String dfsSearch(String start, String end) {
-        if (start == null || end == null) return null;
-        start = start.trim();
-        end = end.trim();
-        if (!nodes.contains(start) || !nodes.contains(end)) return null;
+    private String dfsSearch(String source, String destination) {
+        if (source == null || destination == null) return null;
+        source = source.trim();
+        destination = destination.trim();
+        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
 
-        dfsHelper(start, visited, parent);
+        dfsHelper(source, visited, parent);
 
-        if (!visited.contains(end)) return null;
-        return buildPath(end, parent);
+        if (!visited.contains(destination)) return null;
+        return buildPath(destination, parent);
     }
 
     private void dfsHelper(String current, Set<String> visited, Map<String, String> parent) {
@@ -162,9 +159,9 @@ public class Graph {
         }
     }
 
-    private String buildPath(String end, Map<String, String> parent) {
-        String path = end;
-        String cur = end;
+    private String buildPath(String destination, Map<String, String> parent) {
+        String path = destination;
+        String cur = destination;
 
         while (parent.containsKey(cur)) {
             cur = parent.get(cur);
