@@ -52,9 +52,10 @@ public class Graph {
         }
         Set<String> updatedEdges = new LinkedHashSet<>();
         for (String e : edges) {
-            int i = e.indexOf(" -> ");
-            String left = e.substring(0, i);
-            String right = e.substring(i + 4);
+            String[] parts = splitEdge(e);
+            String left = parts[0];
+            String right = parts[1];
+
             if (!left.equals(clean) && !right.equals(clean)) {
                 updatedEdges.add(e);
             }
@@ -86,12 +87,19 @@ public class Graph {
         }
     }
 
-    // ONLY CHANGE: start → source, end → destination
     public String graphSearch(String source, String destination, Algorithm algo) {
         if (algo == Algorithm.BFS) {
             return bfsSearch(source, destination);
         }
         return dfsSearch(source, destination);
+    }
+
+    private String[] splitEdge(String edge) {
+        int i = edge.indexOf(" -> ");
+        return new String[] {
+            edge.substring(0, i),
+            edge.substring(i + 4)
+        };
     }
 
     private String bfsSearch(String source, String destination) {
@@ -114,9 +122,9 @@ public class Graph {
             }
 
             for (String e : edges) {
-                int i = e.indexOf(" -> ");
-                String left = e.substring(0, i);
-                String right = e.substring(i + 4);
+                String[] parts = splitEdge(e);
+                String left = parts[0];
+                String right = parts[1];
 
                 if (left.equals(current) && !visited.contains(right)) {
                     visited.add(right);
@@ -148,9 +156,9 @@ public class Graph {
     private void dfsHelper(String current, Set<String> visited, Map<String, String> parent) {
         visited.add(current);
         for (String e : edges) {
-            int i = e.indexOf(" -> ");
-            String left = e.substring(0, i);
-            String right = e.substring(i + 4);
+            String[] parts = splitEdge(e);
+            String left = parts[0];
+            String right = parts[1];
 
             if (left.equals(current) && !visited.contains(right)) {
                 parent.put(right, current);
