@@ -17,7 +17,7 @@ public class Graph {
 
     public void addNode(String label) {
         if (label != null && !label.trim().isEmpty()) {
-            nodes.add(label.trim());
+            nodes.add(cleanLabel(label));
         }
     }
 
@@ -32,8 +32,8 @@ public class Graph {
 
     public void addEdge(String srcLabel, String dstLabel) {
         if (srcLabel != null && dstLabel != null) {
-            srcLabel = srcLabel.trim();
-            dstLabel = dstLabel.trim();
+            srcLabel = cleanLabel(srcLabel);
+            dstLabel = cleanLabel(dstLabel);
             if (!srcLabel.isEmpty() && !dstLabel.isEmpty()) {
                 addNode(srcLabel);
                 addNode(dstLabel);
@@ -46,7 +46,7 @@ public class Graph {
         if (nodeLabel == null || nodeLabel.trim().isEmpty()) {
             throw new IllegalArgumentException("bad input");
         }
-        String clean = nodeLabel.trim();
+        String clean = cleanLabel(nodeLabel);
         if (!nodes.remove(clean)) {
             throw new IllegalArgumentException("node missing");
         }
@@ -76,8 +76,8 @@ public class Graph {
         if (from == null || to == null) {
             throw new IllegalArgumentException("null edge");
         }
-        String f = from.trim();
-        String t = to.trim();
+        String f = cleanLabel(from);
+        String t = cleanLabel(to);
         if (f.isEmpty() || t.isEmpty()) {
             throw new IllegalArgumentException("empty edge");
         }
@@ -102,10 +102,14 @@ public class Graph {
         };
     }
 
+    private String cleanLabel(String label) {
+        return label.trim();
+    }
+
     private String bfsSearch(String source, String destination) {
         if (source == null || destination == null) return null;
-        source = source.trim();
-        destination = destination.trim();
+        source = cleanLabel(source);
+        destination = cleanLabel(destination);
         if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Queue<String> q = new LinkedList<>();
@@ -140,8 +144,8 @@ public class Graph {
 
     private String dfsSearch(String source, String destination) {
         if (source == null || destination == null) return null;
-        source = source.trim();
-        destination = destination.trim();
+        source = cleanLabel(source);
+        destination = cleanLabel(destination);
         if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Set<String> visited = new LinkedHashSet<>();
