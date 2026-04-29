@@ -87,11 +87,17 @@ public class Graph {
         }
     }
 
+    // 🔥 UPDATED to use strategy (old code still exists below)
     public String graphSearch(String source, String destination, Algorithm algo) {
+        SearchStrategy strategy;
+
         if (algo == Algorithm.BFS) {
-            return bfsSearch(source, destination);
+            strategy = new BfsSearch();
+        } else {
+            strategy = new DfsSearch();
         }
-        return dfsSearch(source, destination);
+
+        return strategy.search(this, source, destination);
     }
 
     private String[] splitEdge(String edge) {
@@ -106,13 +112,13 @@ public class Graph {
         return label.trim();
     }
 
-    private boolean hasValidSearchNodes(String source, String destination) {
-        return source != null && destination != null
-                && nodes.contains(cleanLabel(source))
-                && nodes.contains(cleanLabel(destination));
+    // 🔥 NEW
+    public Set<String> getNodes() {
+        return nodes;
     }
 
-    private Set<String> getNeighbors(String node) {
+    // 🔥 NEW (was private before)
+    public Set<String> getNeighbors(String node) {
         Set<String> neighbors = new LinkedHashSet<>();
         for (String e : edges) {
             String[] parts = splitEdge(e);
@@ -126,10 +132,12 @@ public class Graph {
         return neighbors;
     }
 
+    // ✅ OLD CODE KEPT (do not delete)
     private String bfsSearch(String source, String destination) {
-        if (!hasValidSearchNodes(source, destination)) return null;
+        if (source == null || destination == null) return null;
         source = cleanLabel(source);
         destination = cleanLabel(destination);
+        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Queue<String> q = new LinkedList<>();
         Set<String> visited = new LinkedHashSet<>();
@@ -158,9 +166,10 @@ public class Graph {
     }
 
     private String dfsSearch(String source, String destination) {
-        if (!hasValidSearchNodes(source, destination)) return null;
+        if (source == null || destination == null) return null;
         source = cleanLabel(source);
         destination = cleanLabel(destination);
+        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
