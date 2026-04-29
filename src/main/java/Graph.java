@@ -112,6 +112,20 @@ public class Graph {
                 && nodes.contains(cleanLabel(destination));
     }
 
+    private Set<String> getNeighbors(String node) {
+        Set<String> neighbors = new LinkedHashSet<>();
+        for (String e : edges) {
+            String[] parts = splitEdge(e);
+            String left = parts[0];
+            String right = parts[1];
+
+            if (left.equals(node)) {
+                neighbors.add(right);
+            }
+        }
+        return neighbors;
+    }
+
     private String bfsSearch(String source, String destination) {
         if (!hasValidSearchNodes(source, destination)) return null;
         source = cleanLabel(source);
@@ -130,15 +144,11 @@ public class Graph {
                 break;
             }
 
-            for (String e : edges) {
-                String[] parts = splitEdge(e);
-                String left = parts[0];
-                String right = parts[1];
-
-                if (left.equals(current) && !visited.contains(right)) {
-                    visited.add(right);
-                    parent.put(right, current);
-                    q.add(right);
+            for (String neighbor : getNeighbors(current)) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    parent.put(neighbor, current);
+                    q.add(neighbor);
                 }
             }
         }
@@ -163,14 +173,10 @@ public class Graph {
 
     private void dfsHelper(String current, Set<String> visited, Map<String, String> parent) {
         visited.add(current);
-        for (String e : edges) {
-            String[] parts = splitEdge(e);
-            String left = parts[0];
-            String right = parts[1];
-
-            if (left.equals(current) && !visited.contains(right)) {
-                parent.put(right, current);
-                dfsHelper(right, visited, parent);
+        for (String neighbor : getNeighbors(current)) {
+            if (!visited.contains(neighbor)) {
+                parent.put(neighbor, current);
+                dfsHelper(neighbor, visited, parent);
             }
         }
     }
