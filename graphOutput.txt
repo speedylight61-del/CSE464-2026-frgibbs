@@ -2,6 +2,10 @@ digraph {
     a -> b;
     b -> c;
     c -> d;
+    d -> a;
+    a -> e;
     e -> f;
-    f -> g;
+    e -> g;
+    f -> h;
+    g -> h;
 }

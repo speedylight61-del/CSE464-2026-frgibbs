@@ -12,7 +12,7 @@ public class Graph {
     private Set<String> edges = new LinkedHashSet<>();
 
     public enum Algorithm {
-        BFS, DFS
+        BFS, DFS, RANDOM
     }
 
     public void addNode(String label) {
@@ -87,18 +87,17 @@ public class Graph {
         }
     }
 
-    // 🔥 UPDATED to use strategy (old code still exists below)
     public String graphSearch(String source, String destination, Algorithm algo) {
-        Search strategy;
-
-        if (algo == Algorithm.BFS) {
-            strategy = new BfsSearch();
-        } else {
-            strategy = new DfsSearch();
-        }
-
-        return strategy.search(this, source, destination);
+    Search strategy;
+    if (algo == Algorithm.BFS) {
+        strategy = new BfsSearch();
+    } else if (algo == Algorithm.DFS) {
+        strategy = new DfsSearch();
+    } else {
+        strategy = new RandomWalkSearch();
     }
+    return strategy.search(this, source, destination);
+}
 
     private String[] splitEdge(String edge) {
         int i = edge.indexOf(" -> ");
@@ -112,12 +111,10 @@ public class Graph {
         return label.trim();
     }
 
-    // 🔥 NEW
     public Set<String> getNodes() {
         return nodes;
     }
 
-    // 🔥 NEW (was private before)
     public Set<String> getNeighbors(String node) {
         Set<String> neighbors = new LinkedHashSet<>();
         for (String e : edges) {
@@ -137,20 +134,16 @@ public class Graph {
         source = cleanLabel(source);
         destination = cleanLabel(destination);
         if (!nodes.contains(source) || !nodes.contains(destination)) return null;
-
         Queue<String> q = new LinkedList<>();
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
-
         q.add(source);
         visited.add(source);
-
         while (!q.isEmpty()) {
             String current = q.poll();
             if (current.equals(destination)) {
                 break;
             }
-
             for (String neighbor : getNeighbors(current)) {
                 if (!visited.contains(neighbor)) {
                     visited.add(neighbor);
@@ -159,7 +152,6 @@ public class Graph {
                 }
             }
         }
-
         if (!visited.contains(destination)) return null;
         return buildPath(destination, parent);
     }
@@ -169,12 +161,9 @@ public class Graph {
         source = cleanLabel(source);
         destination = cleanLabel(destination);
         if (!nodes.contains(source) || !nodes.contains(destination)) return null;
-
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
-
         dfsHelper(source, visited, parent);
-
         if (!visited.contains(destination)) return null;
         return buildPath(destination, parent);
     }
@@ -188,19 +177,15 @@ public class Graph {
             }
         }
     }
-
     private String buildPath(String destination, Map<String, String> parent) {
         String path = destination;
         String cur = destination;
-
         while (parent.containsKey(cur)) {
             cur = parent.get(cur);
             path = cur + " -> " + path;
         }
-
         return path;
     }
-
     public void outputGraph(String filepath) throws Exception {
         FileWriter writer = new FileWriter(filepath);
         writer.write("digraph {\n");
