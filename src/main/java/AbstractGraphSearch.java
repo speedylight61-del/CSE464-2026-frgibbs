@@ -1,6 +1,6 @@
 import java.util.*;
 
-// Template Pattern: this class defines the shared search steps for all algorithms
+// This class defines the shared search steps for all algorithms
 public abstract class AbstractGraphSearch implements Search {
     // Main search method used by BFS and DFS
     public String search(Graph graph, String source, String destination) {
@@ -13,7 +13,7 @@ public abstract class AbstractGraphSearch implements Search {
         }
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
-        // Setup structure (queue for BFS, stack for DFS)
+        // Setup structure, queue for BFS, stack for DFS
         setup(source);
         visited.add(source);
         while (!isEmpty()) {
@@ -23,7 +23,7 @@ public abstract class AbstractGraphSearch implements Search {
             // Stop when destination is found
             if (current.equals(destination)) {
                 System.out.println("Found target node: " + destination);
-                return buildPath(destination, parent); // KEEP arrows for tests
+                return buildPath(destination, parent); 
             }
             // Explore neighbors of current node
             for (String neighbor : graph.getNeighbors(current)) {
