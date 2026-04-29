@@ -89,7 +89,7 @@ public class Graph {
 
     // 🔥 UPDATED to use strategy (old code still exists below)
     public String graphSearch(String source, String destination, Algorithm algo) {
-        SearchStrategy strategy;
+        Search strategy;
 
         if (algo == Algorithm.BFS) {
             strategy = new BfsSearch();
@@ -132,7 +132,6 @@ public class Graph {
         return neighbors;
     }
 
-    // ✅ OLD CODE KEPT (do not delete)
     private String bfsSearch(String source, String destination) {
         if (source == null || destination == null) return null;
         source = cleanLabel(source);

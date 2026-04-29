@@ -1,6 +1,6 @@
 import java.util.*;
 
-public abstract class AbstractGraphSearch implements SearchStrategy {
+public abstract class AbstractGraphSearch implements Search {
 
     public String search(Graph graph, String source, String destination) {
         if (source == null || destination == null) return null;
