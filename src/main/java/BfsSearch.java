@@ -1,5 +1,6 @@
 import java.util.*;
 
+// BFS uses a queue to search level by level.
 public class BfsSearch extends AbstractGraphSearch {
     private Queue<String> queue;
     protected void setup(String source) {

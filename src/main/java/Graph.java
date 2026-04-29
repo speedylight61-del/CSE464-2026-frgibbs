@@ -7,20 +7,16 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 public class Graph {
-
     private Set<String> nodes = new LinkedHashSet<>();
     private Set<String> edges = new LinkedHashSet<>();
-
     public enum Algorithm {
         BFS, DFS, RANDOM
     }
-
     public void addNode(String label) {
         if (label != null && !label.trim().isEmpty()) {
             nodes.add(cleanLabel(label));
         }
     }
-
     public void addNodes(String[] labels) {
         if (labels == null) {
             return;
@@ -29,7 +25,6 @@ public class Graph {
             addNode(label);
         }
     }
-
     public void addEdge(String srcLabel, String dstLabel) {
         if (srcLabel != null && dstLabel != null) {
             srcLabel = cleanLabel(srcLabel);
@@ -41,7 +36,6 @@ public class Graph {
             }
         }
     }
-
     public void removeNode(String nodeLabel) {
         if (nodeLabel == null || nodeLabel.trim().isEmpty()) {
             throw new IllegalArgumentException("bad input");
@@ -62,7 +56,6 @@ public class Graph {
         }
         edges = updatedEdges;
     }
-
     public void removeNodes(String[] nodeArray) {
         if (nodeArray == null) {
             throw new IllegalArgumentException("null input");
@@ -71,7 +64,6 @@ public class Graph {
             removeNode(nodeArray[i]);
         }
     }
-
     public void removeEdge(String from, String to) {
         if (from == null || to == null) {
             throw new IllegalArgumentException("null edge");
@@ -86,9 +78,10 @@ public class Graph {
             throw new IllegalArgumentException("edge missing");
         }
     }
-
+    // Chooses which search algorithm to run based on the selected enum value.
     public String graphSearch(String source, String destination, Algorithm algo) {
     Search strategy;
+    // Strategy Pattern: each algorithm has its own search class.
     if (algo == Algorithm.BFS) {
         strategy = new BfsSearch();
     } else if (algo == Algorithm.DFS) {
@@ -98,7 +91,6 @@ public class Graph {
     }
     return strategy.search(this, source, destination);
 }
-
     private String[] splitEdge(String edge) {
         int i = edge.indexOf(" -> ");
         return new String[] {
@@ -106,15 +98,12 @@ public class Graph {
             edge.substring(i + 4)
         };
     }
-
     private String cleanLabel(String label) {
         return label.trim();
     }
-
     public Set<String> getNodes() {
         return nodes;
     }
-
     public Set<String> getNeighbors(String node) {
         Set<String> neighbors = new LinkedHashSet<>();
         for (String e : edges) {
@@ -128,7 +117,6 @@ public class Graph {
         }
         return neighbors;
     }
-
     private String bfsSearch(String source, String destination) {
         if (source == null || destination == null) return null;
         source = cleanLabel(source);
@@ -155,7 +143,6 @@ public class Graph {
         if (!visited.contains(destination)) return null;
         return buildPath(destination, parent);
     }
-
     private String dfsSearch(String source, String destination) {
         if (source == null || destination == null) return null;
         source = cleanLabel(source);
@@ -167,7 +154,6 @@ public class Graph {
         if (!visited.contains(destination)) return null;
         return buildPath(destination, parent);
     }
-
     private void dfsHelper(String current, Set<String> visited, Map<String, String> parent) {
         visited.add(current);
         for (String neighbor : getNeighbors(current)) {
@@ -195,7 +181,6 @@ public class Graph {
         writer.write("}\n");
         writer.close();
     }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
