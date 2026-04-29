@@ -106,11 +106,16 @@ public class Graph {
         return label.trim();
     }
 
+    private boolean hasValidSearchNodes(String source, String destination) {
+        return source != null && destination != null
+                && nodes.contains(cleanLabel(source))
+                && nodes.contains(cleanLabel(destination));
+    }
+
     private String bfsSearch(String source, String destination) {
-        if (source == null || destination == null) return null;
+        if (!hasValidSearchNodes(source, destination)) return null;
         source = cleanLabel(source);
         destination = cleanLabel(destination);
-        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Queue<String> q = new LinkedList<>();
         Set<String> visited = new LinkedHashSet<>();
@@ -143,10 +148,9 @@ public class Graph {
     }
 
     private String dfsSearch(String source, String destination) {
-        if (source == null || destination == null) return null;
+        if (!hasValidSearchNodes(source, destination)) return null;
         source = cleanLabel(source);
         destination = cleanLabel(destination);
-        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
 
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
