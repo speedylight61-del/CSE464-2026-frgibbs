@@ -7,20 +7,16 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 public class Graph {
-
     private Set<String> nodes = new LinkedHashSet<>();
     private Set<String> edges = new LinkedHashSet<>();
-
     public enum Algorithm {
-        BFS, DFS
+        BFS, DFS, RANDOM
     }
-
     public void addNode(String label) {
         if (label != null && !label.trim().isEmpty()) {
-            nodes.add(label.trim());
+            nodes.add(cleanLabel(label));
         }
     }
-
     public void addNodes(String[] labels) {
         if (labels == null) {
             return;
@@ -29,11 +25,10 @@ public class Graph {
             addNode(label);
         }
     }
-
     public void addEdge(String srcLabel, String dstLabel) {
         if (srcLabel != null && dstLabel != null) {
-            srcLabel = srcLabel.trim();
-            dstLabel = dstLabel.trim();
+            srcLabel = cleanLabel(srcLabel);
+            dstLabel = cleanLabel(dstLabel);
             if (!srcLabel.isEmpty() && !dstLabel.isEmpty()) {
                 addNode(srcLabel);
                 addNode(dstLabel);
@@ -41,29 +36,26 @@ public class Graph {
             }
         }
     }
-
-    // Q1: remove one node and its connected edges
     public void removeNode(String nodeLabel) {
         if (nodeLabel == null || nodeLabel.trim().isEmpty()) {
             throw new IllegalArgumentException("bad input");
         }
-        String clean = nodeLabel.trim();
+        String clean = cleanLabel(nodeLabel);
         if (!nodes.remove(clean)) {
             throw new IllegalArgumentException("node missing");
         }
         Set<String> updatedEdges = new LinkedHashSet<>();
         for (String e : edges) {
-            int i = e.indexOf(" -> ");
-            String left = e.substring(0, i);
-            String right = e.substring(i + 4);
+            String[] parts = splitEdge(e);
+            String left = parts[0];
+            String right = parts[1];
+
             if (!left.equals(clean) && !right.equals(clean)) {
                 updatedEdges.add(e);
             }
         }
         edges = updatedEdges;
     }
-
-    // Q1: remove multiple nodes
     public void removeNodes(String[] nodeArray) {
         if (nodeArray == null) {
             throw new IllegalArgumentException("null input");
@@ -72,14 +64,12 @@ public class Graph {
             removeNode(nodeArray[i]);
         }
     }
-
-    // Q1: remove one edge
     public void removeEdge(String from, String to) {
         if (from == null || to == null) {
             throw new IllegalArgumentException("null edge");
         }
-        String f = from.trim();
-        String t = to.trim();
+        String f = cleanLabel(from);
+        String t = cleanLabel(to);
         if (f.isEmpty() || t.isEmpty()) {
             throw new IllegalArgumentException("empty edge");
         }
@@ -88,92 +78,100 @@ public class Graph {
             throw new IllegalArgumentException("edge missing");
         }
     }
-
-    // Q5: choose BFS or DFS with enum
-    public String graphSearch(String start, String end, Algorithm algo) {
-        if (algo == Algorithm.BFS) {
-            return bfsSearch(start, end);
-        }
-        return dfsSearch(start, end);
+    // Chooses which search algorithm to run based on the selected enum value.
+    public String graphSearch(String source, String destination, Algorithm algo) {
+    Search strategy;
+    // Strategy Pattern: each algorithm has its own search class.
+    if (algo == Algorithm.BFS) {
+        strategy = new BfsSearch();
+    } else if (algo == Algorithm.DFS) {
+        strategy = new DfsSearch();
+    } else {
+        strategy = new RandomWalkSearch();
     }
+    return strategy.search(this, source, destination);
+}
+    private String[] splitEdge(String edge) {
+        int i = edge.indexOf(" -> ");
+        return new String[] {
+            edge.substring(0, i),
+            edge.substring(i + 4)
+        };
+    }
+    private String cleanLabel(String label) {
+        return label.trim();
+    }
+    public Set<String> getNodes() {
+        return nodes;
+    }
+    public Set<String> getNeighbors(String node) {
+        Set<String> neighbors = new LinkedHashSet<>();
+        for (String e : edges) {
+            String[] parts = splitEdge(e);
+            String left = parts[0];
+            String right = parts[1];
 
-    private String bfsSearch(String start, String end) {
-        if (start == null || end == null) return null;
-        start = start.trim();
-        end = end.trim();
-        if (!nodes.contains(start) || !nodes.contains(end)) return null;
-
+            if (left.equals(node)) {
+                neighbors.add(right);
+            }
+        }
+        return neighbors;
+    }
+    private String bfsSearch(String source, String destination) {
+        if (source == null || destination == null) return null;
+        source = cleanLabel(source);
+        destination = cleanLabel(destination);
+        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
         Queue<String> q = new LinkedList<>();
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
-
-        q.add(start);
-        visited.add(start);
-
+        q.add(source);
+        visited.add(source);
         while (!q.isEmpty()) {
             String current = q.poll();
-            if (current.equals(end)) {
+            if (current.equals(destination)) {
                 break;
             }
-
-            for (String e : edges) {
-                int i = e.indexOf(" -> ");
-                String left = e.substring(0, i);
-                String right = e.substring(i + 4);
-
-                if (left.equals(current) && !visited.contains(right)) {
-                    visited.add(right);
-                    parent.put(right, current);
-                    q.add(right);
+            for (String neighbor : getNeighbors(current)) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    parent.put(neighbor, current);
+                    q.add(neighbor);
                 }
             }
         }
-
-        if (!visited.contains(end)) return null;
-        return buildPath(end, parent);
+        if (!visited.contains(destination)) return null;
+        return buildPath(destination, parent);
     }
-
-    private String dfsSearch(String start, String end) {
-        if (start == null || end == null) return null;
-        start = start.trim();
-        end = end.trim();
-        if (!nodes.contains(start) || !nodes.contains(end)) return null;
-
+    private String dfsSearch(String source, String destination) {
+        if (source == null || destination == null) return null;
+        source = cleanLabel(source);
+        destination = cleanLabel(destination);
+        if (!nodes.contains(source) || !nodes.contains(destination)) return null;
         Set<String> visited = new LinkedHashSet<>();
         Map<String, String> parent = new HashMap<>();
-
-        dfsHelper(start, visited, parent);
-
-        if (!visited.contains(end)) return null;
-        return buildPath(end, parent);
+        dfsHelper(source, visited, parent);
+        if (!visited.contains(destination)) return null;
+        return buildPath(destination, parent);
     }
-
     private void dfsHelper(String current, Set<String> visited, Map<String, String> parent) {
         visited.add(current);
-        for (String e : edges) {
-            int i = e.indexOf(" -> ");
-            String left = e.substring(0, i);
-            String right = e.substring(i + 4);
-
-            if (left.equals(current) && !visited.contains(right)) {
-                parent.put(right, current);
-                dfsHelper(right, visited, parent);
+        for (String neighbor : getNeighbors(current)) {
+            if (!visited.contains(neighbor)) {
+                parent.put(neighbor, current);
+                dfsHelper(neighbor, visited, parent);
             }
         }
     }
-
-    private String buildPath(String end, Map<String, String> parent) {
-        String path = end;
-        String cur = end;
-
+    private String buildPath(String destination, Map<String, String> parent) {
+        String path = destination;
+        String cur = destination;
         while (parent.containsKey(cur)) {
             cur = parent.get(cur);
             path = cur + " -> " + path;
         }
-
         return path;
     }
-
     public void outputGraph(String filepath) throws Exception {
         FileWriter writer = new FileWriter(filepath);
         writer.write("digraph {\n");
@@ -183,7 +181,6 @@ public class Graph {
         writer.write("}\n");
         writer.close();
     }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
